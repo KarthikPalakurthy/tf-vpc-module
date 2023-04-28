@@ -6,7 +6,7 @@ resource "aws_vpc" "main" {
     )
 }
 
-resource "aws_subnet" "default" {
+resource "aws_subnet" "main" {
   count = length(var.subnet_cidr)
   vpc_id     = aws_vpc.main.id
   cidr_block = var.subnet_cidr[count.index]
