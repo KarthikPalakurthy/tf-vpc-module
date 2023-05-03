@@ -38,11 +38,6 @@ resource "aws_route" "igw" {
   route_table_id = aws_vpc.main.default_route_table_id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id = aws_internet_gateway.igw.id
-
-  tags= merge(
-    local.common_tags,
-    { Name = "${var.env}-igw"}
-  )
 }
 
 resource "aws_route" "default-vpc" {
@@ -53,6 +48,10 @@ resource "aws_route" "default-vpc" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
+  tags= merge(
+    local.common_tags,
+    { Name = "${var.env}-igw"}
+  )
 }
 
 
