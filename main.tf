@@ -50,13 +50,13 @@ resource "aws_route_table" "example" {
   vpc_id = aws_vpc.main.id
 
   route {
-    ipv6_cidr_block        = "0.0.0.0/0"
+    cidr_block        = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
   }
 
   route {
     cidr_block = data.aws_vpc.default.cidr_block
-    gateway_id = aws_internet_gateway.igw.id
+    vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
   }
 
   tags= merge(
