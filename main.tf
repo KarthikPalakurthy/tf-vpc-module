@@ -32,6 +32,7 @@ resource "aws_vpc_peering_connection" "peering" {
   peer_owner_id = data.aws_caller_identity.current.account_id
   peer_vpc_id = var.default_vpc_id
   vpc_id      = aws_vpc.main.id
+  auto_accept = true
   tags = merge(
     local.common_tags,
     { Name = "${var.env}-peering"}
@@ -71,6 +72,52 @@ resource "aws_route_table_association" "public-rt-assoc" {
   route_table_id = aws_route_table.public-route.id
 }
 
+
+resource "aws_eip" "natgw-ip" {
+  vpc      = true
+}
+
+resource "aws_nat_gateway" "ngw" {
+  allocation_id = aws_eip.natgw-ip.id
+  subnet_id     = aws_subnet.public.*.id[0]
+
+  tags= merge(
+    local.common_tags,
+    { Name = "${var.env}-natgateway"}
+  )
+
+  //depends_on = [aws_internet_gateway.example]
+}
+
+resource "aws_route_table" "private-route" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = data.aws_vpc.default.cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
+  }
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.ngw.id
+  }
+
+  tags= merge(
+    local.common_tags,
+    { Name = "${var.env}-private-route-table"}
+  )
+}
+
+resource "aws_route_table_association" "private-rt-assoc" {
+  count          = length(aws_subnet.private)
+  subnet_id      = aws_subnet.private.*.id[count.index]
+  route_table_id = aws_route_table.private-route.id
+}
+
+resource "aws_route" "route" {
+  route_table_id = data.aws_vpc.default.main_route_table_id
+  destination_cidr_block = var.cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
+}
 #data "aws_ami" "centos8" {
 #  most_recent = true
 #  name_regex = "Centos-8-DevOps-Practice"
