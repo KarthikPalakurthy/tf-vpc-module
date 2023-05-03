@@ -2,7 +2,7 @@ resource "aws_vpc" "main" {
   cidr_block = var.cidr_block
   tags= merge(
     local.common_tags,
-    { Name = "${var.env}-vpc-"}
+    { Name = "${var.env}-vpc"}
     )
 }
 
@@ -17,3 +17,8 @@ resource "aws_subnet" "main" {
     )
 }
 
+resource "aws_vpc_peering_connection" "foo" {
+  peer_owner_id = data.aws_caller_identity.current.account_id
+  peer_vpc_id   = vpc-096e167dbab1ac004
+  vpc_id        = aws_vpc.main.id
+}
