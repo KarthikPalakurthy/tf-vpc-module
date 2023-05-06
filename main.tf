@@ -17,14 +17,14 @@ resource "aws_vpc_peering_connection" "peering" {
   )
 }
 
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.main.id
-  tags= merge(
-    local.common_tags,
-    { Name = "${var.env}-igw"}
-  )
-}
-
+#resource "aws_internet_gateway" "igw" {
+#  vpc_id = aws_vpc.main.id
+#  tags= merge(
+#    local.common_tags,
+#    { Name = "${var.env}-igw"}
+#  )
+#}
+#
 
 #resource "aws_eip" "natgw-ip" {
 #  vpc      = true
