@@ -11,9 +11,9 @@ module "public_subnets" {
   nat_gw            = lookup(each.value, "nat_gw", false)
 
   vpc_id                 = aws_vpc.main.id
-  vpc_peering_connection = aws_vpc_peering_connection.peering.id
+  vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
   internet_gw_id         = aws_internet_gateway.igw.id
-  tags                   =  local.common_tags
+  common_tags                   =  local.common_tags
 }
 
 
@@ -30,7 +30,7 @@ internet_gw       = lookup(each.value, "internet_gw", false)
 nat_gw            = lookup(each.value, "nat_gw", false)
 
 vpc_id                 = aws_vpc.main.id
-vpc_peering_connection = aws_vpc_peering_connection.peering.id
+vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
 nat_gw_id              = aws_nat_gw.ngw.id
-tags                   =  local.common_tags
+common_tags                   =  local.common_tags
 }
