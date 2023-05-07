@@ -23,7 +23,7 @@ default_vpc_id    = var.default_vpc_id
 env               =var.env
 availability_zone = var.availability_zone
 
-for_each          = var.public_subnets
+for_each          = var.private_subnets
 cidr_block        = each.value.cidr_block
 name              = each.value.name
 internet_gw       = lookup(each.value, "internet_gw", false)
