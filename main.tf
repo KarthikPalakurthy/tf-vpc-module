@@ -29,16 +29,16 @@ resource "aws_eip" "natgw-ip" {
   vpc      = true
 }
 
-#resource "aws_nat_gateway" "ngw" {
-#  allocation_id = aws_eip.natgw-ip.id
-#  subnet_id     = aws_subnet.public.*.id[0]
-#
-#  tags= merge(
-#    local.common_tags,
-#    { Name = "${var.env}-natgateway"}
-#  )
-#  //depends_on = [aws_internet_gateway.example]
-#}
+resource "aws_nat_gateway" "ngw" {
+  allocation_id = aws_eip.natgw-ip.id
+  subnet_id     = lookup(lookup(module.public_subnets, "public", null), "subnet_ids", null)[0]
+
+  tags= merge(
+    local.common_tags,
+    { Name = "${var.env}-natgateway"}
+  )
+  //depends_on = [aws_internet_gateway.example]
+}
 
 
 resource "aws_route" "route" {
