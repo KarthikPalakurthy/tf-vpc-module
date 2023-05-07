@@ -29,17 +29,17 @@ resource "aws_route_table_association" "association" {
   route_table_id = aws_route_table.route_table.id
 }
 
-resource "aws_route" "internet_gateway" {
+resource "aws_route" "internet_gateway_route" {
   count                     = var.internet_gw ? 1 : 0
   route_table_id            = aws_route_table.route_table.id
   destination_cidr_block    = "0.0.0.0/0"
   gateway_id = var.internet_gw_id
 }
 
-resource "aws_route" "nat_gateway" {
+resource "aws_route" "nat_gateway_route" {
   count                     = var.nat_gw ? 1 : 0
   route_table_id            = aws_route_table.route_table.id
   destination_cidr_block    = "0.0.0.0/0"
-  gateway_id                = var.nat_gw_id
+  nat_gateway_id                = var.nat_gw_id
 
 }
